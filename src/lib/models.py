@@ -23,3 +23,10 @@ class ProfileType(BaseModel):
 
     followers: list[str]
     followCount: int
+
+class jwtPayload(BaseModel):
+    iss: str
+    sub: str
+    name: str
+    iat: int
+    exp: int

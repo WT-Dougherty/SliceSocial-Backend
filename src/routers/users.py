@@ -1,5 +1,6 @@
 from fastapi import APIRouter
-from models import ProfileType, DateType
+from models import ProfileType, DateType, jwtPayload, GenerateID
+from auth import genJWT
 
 router = APIRouter(
     prefix="/users",
@@ -18,6 +19,10 @@ profile = ProfileType(username='Will',
 async def get_users():
     return [{"id": 1, "name": "Alice"}]
 
-@router.post("/")
-async def create_user(user: dict):
-    return {"message": "User created", "user": user}
+@router.post("/create")
+async def create_user(user: ProfileType):
+    new_id = GenerateID(8)
+    
+    genJWT({
+        sum: '69',
+    })

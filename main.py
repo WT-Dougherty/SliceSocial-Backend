@@ -1,7 +1,9 @@
 from fastapi import FastAPI
-from routers import users
 
-USER_PROFILES_ENDPOINT = 'https://xsqio3ul1k.execute-api.us-east-2.amazonaws.com/development/userprofiles'
+from src.routers import users
+from src.routers import auth
 
 app = FastAPI()
 app.include_router(users.router)
+# app.include_router(posts.router)
+app.include_router(auth.router)
