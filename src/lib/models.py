@@ -12,7 +12,7 @@ class DateType(BaseModel):
     year: str
 
 class ProfileType(BaseModel):
-    userID: str | None = GenerateID(8)
+    userID: str | None = GenerateID(16)
     username: str
     password: str
     birthday: DateType
@@ -21,12 +21,13 @@ class ProfileType(BaseModel):
     profilePicture: str | None = DEFAULT_PROFILE_PHOTO
     bio: str | None = ''
 
-    followers: list[str]
-    followCount: int
+    follow_list: list[str] | None = []
+    follows: int
 
 class jwtPayload(BaseModel):
     iss: str
     sub: str
-    name: str
+    aud: str
     iat: int
     exp: int
+    nbf: int
