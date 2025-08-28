@@ -17,3 +17,16 @@ def sqlCheckEmail(email):
     with conn.cursor() as cur:
         cur.execute("SELECT EXISTS (SELECT 1 FROM users WHERE email = %s);", (email,))
         return cur.fetchone()[0]
+
+def sqlAuthenticate(username, password):
+    print('username: ', username)
+    conn = get_conn()
+    with conn.cursor() as cur:
+        cur.execute("""SELECT userID FROM users
+                    WHERE username = %s AND password = %s;""",
+                    (username, password,))
+        result = cur.fetchone()
+        if result:
+            return result[0]
+        else:
+            return None

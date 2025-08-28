@@ -31,3 +31,7 @@ class jwtPayload(BaseModel):
     iat: int
     exp: int
     nbf: int
+
+class loginParams(BaseModel):
+    username: str
+    password: str

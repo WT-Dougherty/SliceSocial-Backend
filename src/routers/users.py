@@ -5,8 +5,10 @@ parent = os.path.dirname(current)
 sys.path.append(parent)
 
 # import packages
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, status
 from dotenv import load_dotenv
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
 
 # import local modules
 from lib.models import ProfileType, jwtPayload, GenerateID
@@ -37,10 +39,10 @@ async def create_user(user: ProfileType):
     
     # safety checks
     # check if username or email are taken
-    if sqlCheckUsername(user.username):
-        raise HTTPException(status_code=409, detail="Username is Taken")
     if sqlCheckEmail(user.email):
-        raise HTTPException(status_code=409, detail="Email is Taken")
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email is Taken")
+    if sqlCheckUsername(user.username):
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Username is Taken")
 
     # add user profile to db
     sqlCreateAccount(user)
@@ -56,12 +58,14 @@ async def create_user(user: ProfileType):
     )
     newJWT = genJWT(payload=payload)
 
-    return {
-        "status-code": 201,
-        "body": {
-            "access_token": newJWT,
-            "token_type": "JWT",
-            "expires_in": 2592000,
-            "refresh_token": None,
-        }
-    }
+    return JSONResponse(
+        status_code=status.HTTP_201_CREATED,
+        content=jsonable_encoder(
+            {
+                "access_token": newJWT,
+                "token_type": "JWT",
+                "expires_in": 2592000,
+                "refresh_token": None,
+            }
+        )
+    )
