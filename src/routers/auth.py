@@ -38,8 +38,8 @@ def genJWT(payload : jwtPayload):
 # authentication endpoints
 @router.post("/login")
 async def authenticate(credentials : loginParams):
-    print("Here")
     id = sqlAuthenticate(credentials.username, credentials.password)
+    print(id)
     if id != None:
         payload = jwtPayload(
             iss=SERVER_NAME,

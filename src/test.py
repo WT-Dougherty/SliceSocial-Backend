@@ -13,7 +13,7 @@ from lib.models import ProfileType, DateType, jwtPayload
 #                     email='willtdougherty@gmail.com',
 #                     followCount=0)
 # sqlRemoveAccount('9ObnGt8Rwa4M5I2G')
-# sqlViewTable()
+sqlViewTable()
 
 payload = jwtPayload(
     iss='localhost',

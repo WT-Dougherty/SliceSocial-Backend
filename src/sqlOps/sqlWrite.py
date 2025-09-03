@@ -6,6 +6,9 @@ parent = os.path.dirname(current)
 sys.path.append(parent)
 from lib.models import ProfileType
 
+from fastapi import HTTPException
+from psycopg import sql
+
 def sqlCreateAccount(usr : ProfileType):
     conn = get_conn()
     with conn.cursor() as cur:
@@ -24,11 +27,23 @@ def sqlRemoveAccount(userID : str):
         cur.execute(
             """
             DELETE FROM users
-            WHERE userID = %s""",
+            WHERE userID = %s;""",
             (userID,)
         )
         conn.commit()
 
-
-"""INSERT INTO users (userID, username, password, birthday, email, follows)
-VALUES ('gh37xp0f7b5s98bh', 'WillDougherty', 'password', ('18', 'June', '2002'), 'willtdougherty@gmail.com', 0);"""
+def sqlPatchAccount(userID : str, attribute: str, value: str):
+    conn = get_conn()
+    with conn.cursor() as cur:
+        query = sql.SQL(
+            "UPDATE users SET {col} = %s "
+            "WHERE userID = %s "
+            "RETURNING {col};"
+        ).format(col=sql.Identifier(attribute))
+        
+        cur.execute( query, (value, userID,) )
+        if value == cur.fetchone()[0]:
+            conn.commit()
+            return
+        else:
+            raise HTTPException(status_code=404, detail="User not found.")

@@ -20,6 +20,7 @@ def sqlCheckEmail(email):
 
 def sqlAuthenticate(username, password):
     print('username: ', username)
+    print('password: ', password)
     conn = get_conn()
     with conn.cursor() as cur:
         cur.execute("""SELECT userID FROM users
@@ -30,3 +31,11 @@ def sqlAuthenticate(username, password):
             return result[0]
         else:
             return None
+
+def sqlGetUserInfo(userID):
+    conn = get_conn()
+    with conn.cursor() as cur:
+        cur.execute("""SELECT * FROM users
+                    WHERE userID = %s;""",
+                    (userID,))
+        return cur.fetchall()
