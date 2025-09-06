@@ -8,15 +8,15 @@ sys.path.append(parent)
 from fastapi import APIRouter, HTTPException, status, Response
 from dotenv import load_dotenv
 from fastapi.encoders import jsonable_encoder
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel
 from typing import Optional
 
 # import local modules
 from lib.models import ProfileType, jwtPayload, GenerateID
 from routers.auth import genJWT
-from sqlOps.sqlRead import sqlCheckID, sqlCheckUsername, sqlCheckEmail, sqlGetUserInfo
-from sqlOps.sqlWrite import sqlCreateAccount, sqlPatchAccount
+from sqlOps.users.sqlRead import sqlCheckID, sqlCheckUsername, sqlCheckEmail, sqlGetUserInfo
+from sqlOps.users.sqlWrite import sqlCreateAccount, sqlPatchAccount
 
 # load environment variables
 load_dotenv()
@@ -28,9 +28,8 @@ router = APIRouter(
 )
 
 @router.get("/")
-async def get_user_posts(userID: str):
+async def get_user(userID: str):
     info = sqlGetUserInfo(userID)[0]
-    print(info)
     if info:
         rp = {
             "userID":info[0],
@@ -44,7 +43,6 @@ async def get_user_posts(userID: str):
         return JSONResponse(status_code=status.HTTP_200_OK, content=jsonable_encoder(rp))
     else:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
-
 
 class ProfileRead(BaseModel):
     userID: str

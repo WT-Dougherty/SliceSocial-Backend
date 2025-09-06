@@ -14,7 +14,7 @@ import jwt
 
 # import local modules
 from lib.models import jwtPayload, loginParams
-from sqlOps.sqlRead import sqlAuthenticate
+from sqlOps.users.sqlRead import sqlAuthenticate, sqlCheckUsername
 
 router = APIRouter(
     prefix="/auth",
@@ -38,8 +38,10 @@ def genJWT(payload : jwtPayload):
 # authentication endpoints
 @router.post("/login")
 async def authenticate(credentials : loginParams):
+    if not sqlCheckUsername(credentials.username):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User Not Found")
     id = sqlAuthenticate(credentials.username, credentials.password)
-    print(id)
+    print("User", id, "is logging in")
     if id != None:
         payload = jwtPayload(
             iss=SERVER_NAME,

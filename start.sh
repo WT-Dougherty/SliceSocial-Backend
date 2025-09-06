@@ -11,7 +11,7 @@ echo
 
 echo "configuring environment"
 python3 -m pip install --upgrade pip
-pip install -r requirements.txt
+./.venv/bin/python -m pip install -r requirements.txt
 echo
 
 echo "starting server"

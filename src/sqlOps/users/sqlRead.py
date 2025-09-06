@@ -1,4 +1,10 @@
-from .sqlConn import get_conn
+# add parent directory to system paths
+import sys, os
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
+
+from sqlOps.sqlConn import get_conn
 
 def sqlCheckID(id):
     conn = get_conn()
@@ -19,8 +25,6 @@ def sqlCheckEmail(email):
         return cur.fetchone()[0]
 
 def sqlAuthenticate(username, password):
-    print('username: ', username)
-    print('password: ', password)
     conn = get_conn()
     with conn.cursor() as cur:
         cur.execute("""SELECT userID FROM users

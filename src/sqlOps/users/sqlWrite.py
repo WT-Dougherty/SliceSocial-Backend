@@ -1,4 +1,10 @@
-from .sqlConn import get_conn
+# add parent directory to system paths
+import sys, os
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
+
+from sqlOps.sqlConn import get_conn
 
 import sys, os
 current = os.path.dirname(os.path.realpath(__file__))
@@ -40,8 +46,9 @@ def sqlPatchAccount(userID : str, attribute: str, value: str):
             "WHERE userID = %s "
             "RETURNING {col};"
         ).format(col=sql.Identifier(attribute))
-        
+
         cur.execute( query, (value, userID,) )
+
         if value == cur.fetchone()[0]:
             conn.commit()
             return
