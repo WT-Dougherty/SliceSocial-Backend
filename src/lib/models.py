@@ -40,6 +40,14 @@ class PostType(BaseModel):
     comment_count: Optional[int] = 0
     like_count: Optional[int] = 0
 
+# ----------------- COMMENTS -----------------
+class CommentType(BaseModel):
+    postID: str
+    commentID: str
+    username: str
+    comment: str
+    posted_at: str
+
 # ----------------- AUTHORIZATION -----------------
 class jwtPayload(BaseModel):
     iss: str

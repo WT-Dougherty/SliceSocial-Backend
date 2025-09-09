@@ -5,6 +5,9 @@
 # from lib.models import ProfileType, DateType, jwtPayload, GenerateID
 # from minioDB.conn import s3
 # from sqlOps.posts.sqlRead import sqlGetPost, sqlGetProfilePosts
+from lib.models import GenerateID
+from sqlOps.posts.sqlWrite import sqlAddPost
+from lib.models import PostType
 from datetime import datetime
 
 # birthday = DateType(day='18', month='June', year='2002')
@@ -27,10 +30,17 @@ from datetime import datetime
 #     nbf=0
 # )
 # sqlAuthenticate('WillDougherty', 'passwosrd')
-# print(GenerateID(16))
+print(GenerateID(16))
 # print(sqlGetPost('984WAWyDxKWDW8ix'))
 # print(sqlGetProfilePosts('7Pp2bzGeGWJDzz61'))
 
 dt = datetime.now()
 formatted_date_time = dt.strftime("%Y-%m-%dT%H:%M:%SZ")
 print(formatted_date_time)
+# new_post = PostType(
+#     postID=GenerateID(16),
+#     userID="tYzR36S2gwdYkpPR",
+#     username="LebronJames",
+#     posted_at=formatted_date_time
+# )
+# sqlAddPost(new_post)
