@@ -43,3 +43,11 @@ def sqlGetUserInfo(userID):
                     WHERE userID = %s;""",
                     (userID,))
         return cur.fetchall()
+
+def sqlGetUsername(userID):
+    conn = get_conn()
+    with conn.cursor() as cur:
+        cur.execute("""SELECT username FROM users
+                    WHERE userID = %s;""",
+                    (userID,))
+        return cur.fetchall()

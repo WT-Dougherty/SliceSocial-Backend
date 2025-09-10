@@ -15,7 +15,7 @@ from typing import Optional
 # import local modules
 from lib.models import ProfileType, jwtPayload, GenerateID
 from routers.auth import genJWT
-from sqlOps.users.sqlRead import sqlCheckID, sqlCheckUsername, sqlCheckEmail, sqlGetUserInfo
+from sqlOps.users.sqlRead import sqlCheckID, sqlCheckUsername, sqlCheckEmail, sqlGetUserInfo, sqlGetUsername
 from sqlOps.users.sqlWrite import sqlCreateAccount, sqlPatchAccount
 
 # load environment variables
@@ -117,3 +117,11 @@ async def create_user(user: ProfileType):
             }
         )
     )
+
+@router.get("/username")
+async def get_user(userID: str):
+    info = sqlGetUsername(userID)[0]
+    if info:
+        return JSONResponse(status_code=status.HTTP_200_OK, content=jsonable_encoder(info))
+    else:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")

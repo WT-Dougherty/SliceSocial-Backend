@@ -12,9 +12,9 @@ from fastapi.responses import JSONResponse
 from datetime import datetime
 
 # import local modules
-from lib.models import CommentType
+from lib.models import CommentType, GenerateID
 from sqlOps.comments.sqlRead import sqlGetPostComments
-from sqlOps.comments.sqlWrite import sqlAddComment
+from sqlOps.comments.sqlWrite import sqlAddComment, sqlRemoveComment
 
 # load environment variables
 load_dotenv()
@@ -53,8 +53,17 @@ async def get_post_comments(postID: str):
 
 @router.post('/')
 async def add_post(comment : CommentType):
+    comment.commentID = GenerateID(16)
     try:
         sqlAddComment(comment=comment)
         return Response(status_code=status.HTTP_201_CREATED)
     except:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+@router.delete('/')
+async def get_post_comments(commentID: str):
+    try:
+        sqlRemoveComment(commentID)
+    except:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    return JSONResponse(status_code=status.HTTP_204_NO_CONTENT, content={})

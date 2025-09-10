@@ -2,11 +2,16 @@ from pydantic import BaseModel
 from typing import Optional
 import random, string
 from datetime import datetime
+from dateutil import parser
 
 DEFAULT_PROFILE_PHOTO = 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png'
 
 def GenerateID(n):
     return ''.join( random.choice(string.ascii_letters + string.digits) for _ in range(n) )
+def GenerateTimestamp():
+    dt: datetime = datetime.now()
+    formatted_date_time = dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+    return parser.isoparse(formatted_date_time)
 
 # ----------------- FOR PROFILE OBJECTS -----------------
 class DateType(BaseModel):
@@ -43,10 +48,10 @@ class PostType(BaseModel):
 # ----------------- COMMENTS -----------------
 class CommentType(BaseModel):
     postID: str
-    commentID: str
+    commentID: Optional[str] = ''
     username: str
     comment: str
-    posted_at: str
+    posted_at: Optional[str] = ''
 
 # ----------------- AUTHORIZATION -----------------
 class jwtPayload(BaseModel):
